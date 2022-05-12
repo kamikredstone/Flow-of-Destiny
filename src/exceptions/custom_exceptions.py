@@ -9,3 +9,9 @@ class ItemNotStackable(Exception):
 
 class ItemAmountZero(Exception):
     pass
+
+class ItemNotInInventory(Exception):
+    pass
+
+class NotEnoughSpace(Exception):
+    pass

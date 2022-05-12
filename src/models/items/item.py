@@ -1,6 +1,6 @@
 from FlowOfDestiny.src.models.char_sheet_classes.stats import Stats
 from uuid import uuid4
-from FlowOfDestiny.src.excetions.custom_exceptions import ItemNotStackable, ItemAmountZero
+from FlowOfDestiny.src.exceptions.custom_exceptions import ItemNotStackable, ItemAmountZero
 
 class Item():
 
@@ -25,7 +25,7 @@ class Item():
     def isStackable(self):
         return self._stackable
 
-    def get_affected_stats(self):
+    def get_affected_stats(self) -> dict:
         return self._affected_stats
 
     def get_placement(self):
@@ -39,11 +39,9 @@ class Item():
 
     def change_amount(self, n):
         if self.isStackable():
-            if n > self._amount and n < 0:
+            if abs(n) > self._amount and n < 0:
                 self._amount = 0
-            elif n < self._amount and n < 0:
-                self._amount -= n
-            elif n > 0:
+            else:
                 self._amount += n
         else:
             raise ItemNotStackable
@@ -53,33 +51,33 @@ class Item():
     
 class Weapon(Item):
     
-    def __init__(self, name: str, stackable: bool = False, placement: str, level_req: int, rarity: str, affected_stats: Stats, damage, amount: int = 1):
+    def __init__(self, name: str, placement: str, level_req: int, rarity: str, affected_stats: Stats, damage, amount: int = 1, stackable: bool = False):
         super().__init__(name, stackable, placement, level_req, rarity, affected_stats, amount)
         self._damage = damage
 
 
 class Armor(Item):
     
-    def __init__(self, name: str, stackable: bool = False, placement: str, level_req: int, rarity: str, affected_stats: Stats, armor, amount: int = 1):
+    def __init__(self, name: str, placement: str, level_req: int, rarity: str, affected_stats: Stats, armor, amount: int = 1, stackable: bool = False):
         super().__init__(name, stackable, placement, level_req, rarity, affected_stats, amount)
         self._armor = armor
 
 
 class Ring(Item):
 
-    def __init__(self, name: str, stackable: bool = False, placement: str, level_req: int, rarity: str, affected_stats: Stats, effects: dict, amount: int = 1):
+    def __init__(self, name: str, placement: str, level_req: int, rarity: str, affected_stats: Stats, effects: dict, amount: int = 1, stackable: bool = False):
         super().__init__(name, stackable, placement, level_req, rarity, affected_stats, amount)
         self._effects = effects
 
 class Amulet(Item):
 
-    def __init__(self, name: str, stackable: bool = False, placement: str = "Neck", level_req: int, rarity: str, affected_stats: Stats, effects: dict, amount: int = 1):
+    def __init__(self, name: str, level_req: int, rarity: str, affected_stats: Stats, effects: dict, amount: int = 1, stackable: bool = False, placement: str = "Neck"):
         super().__init__(name, stackable, placement, level_req, rarity, affected_stats, amount)
         self._effects = effects
 
 class Misc(Item):
 
-    def __init__(self, name: str, stackable: bool = True, placement: str, level_req: int, rarity: str, affected_stats: Stats, amount: int = 1):
+    def __init__(self, name: str, rarity: str, affected_stats: Stats = None, amount: int = 1, stackable: bool = True, placement: str = None, level_req: int = 0):
         super().__init__(name, stackable, placement, level_req, rarity, affected_stats, amount)
     
 
